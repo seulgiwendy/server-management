@@ -1,0 +1,24 @@
+#!/bin/bash
+
+echo "> check current running port:"
+CURRENT_PROFILE=$(curl -s http://localhost/profile)
+
+if [ $CURRENT_PROFILE == set1 ]
+then
+    IDLE_PORT = 8084
+elif [ $CURRENT_PROFILE == set2 ]
+then
+    IDLE_PORT = 8083
+
+else
+    echo "> No Matching Profile available."
+    echo "> assign port 8083"
+    IDLE_PORT = 8083
+
+fi
+
+echo "> switching proxy port to $IDLE_PORT."
+echo "set \$service_url http://127.0.0.1:${IDLE_PORT};" | sudo tee /etc/nginx/conf.d/print-service-url.inc
+echo "> Reload Nginx. All things good to go!"
+
+sudo service nginx reload
